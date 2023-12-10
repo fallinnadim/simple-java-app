@@ -1,27 +1,17 @@
-pipeline {
-    triggers {
-        pollSCM('TZ=Asia/Jakarta\nH/2 * * * *')
-           }
-    agent {
-        docker {
-            image 'maven:3.9.5-eclipse-temurin-17-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-    stages {
+node {
+    properties([pipelineTriggers([pollSCM('TZ=Asia/Jakarta\nH/2 * * * *')])])
+    docker.image('maven:3.9.5-eclipse-temurin-17-alpine').inside('-v /root/.m2:/root/.m2') {
         stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
+            sh 'mvn -B -DskipTests clean package'
         }
         stage('Test') {
-            steps {
+            try {
                 sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
+            } catch (e){
+                echo 'test went wrong'
+                throw (e)
+            } finally {
+                junit 'target/surefire-reports/*.xml'
             }
         }
     }
