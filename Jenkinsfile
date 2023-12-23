@@ -25,7 +25,7 @@ pipeline {
         }
     }
     triggers {
-        pollSCM 'H/2 * * * *'
+        pollSCM 'TZ=Asia/Jakarta\nH/2 * * * *'
     }
     stages {
         stage('Build') {
