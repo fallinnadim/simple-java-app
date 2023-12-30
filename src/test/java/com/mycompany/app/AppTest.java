@@ -18,6 +18,6 @@ public class AppTest {
     @Test
     public void testAppMessage() {
         App app = new App();
-        assertEquals("selalu senang melihat matamu", app.getMessage());
+        assertEquals("selalu merasa nyaman denganmu", app.getMessage());
     }
 }
